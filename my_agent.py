@@ -2,8 +2,8 @@
 
 """
 File Name:      my_agent.py
-Authors:        TODO: Your names here!
-Date:           TODO: The date you finally started working on this.
+Authors:        Arihan Shah // Naud Ghebre
+Date:           3/27/19
 
 Description:    Python file for my agent.
 Source:         Adapted from recon-chess (https://pypi.org/project/reconchess/)
@@ -18,7 +18,9 @@ from player import Player
 class MyAgent(Player):
 
     def __init__(self):
-        pass
+        self.board = None
+        self.color = None
+        self.my_piece_captured_square = None
         
     def handle_game_start(self, color, board):
         """
@@ -29,7 +31,8 @@ class MyAgent(Player):
         :return:
         """
         # TODO: implement this method
-        pass
+        self.board = board
+        self.color = color
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -38,7 +41,9 @@ class MyAgent(Player):
         :param captured_piece: bool - true if your opponents captured your piece with their last move
         :param captured_square: chess.Square - position where your piece was captured
         """
-        pass
+        self.my_piece_captured_square = captured_square
+        if captured_piece:
+            self.board.remove_piece_at(captured_square)
 
     def choose_sense(self, possible_sense, possible_moves, seconds_left):
         """
@@ -70,7 +75,9 @@ class MyAgent(Player):
         """
         # TODO: implement this method
         # Hint: until this method is implemented, any senses you make will be lost.
-        pass
+
+        for square, piece in sense_result:
+            self.board.set_piece_at(square, piece)
 
     def choose_move(self, possible_moves, seconds_left):
         """
@@ -101,7 +108,8 @@ class MyAgent(Player):
         :param captured_square: chess.Square - position where you captured the piece
         """
         # TODO: implement this method
-        pass
+        if taken_move is not None:
+            self.board.push(taken_move)
         
     def handle_game_end(self, winner_color, win_reason):  # possible GameHistory object...
         """
