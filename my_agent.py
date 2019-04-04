@@ -34,7 +34,7 @@ class MyAgent(Player):
         # TODO: implement this method
         self.board = board
         self.color = color
-        self.senses = np.empty([6,6])
+        self.sensestaken = []
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -59,8 +59,24 @@ class MyAgent(Player):
         :example: choice = chess.A1
         """
         # TODO: update this method
+        new_senses = set(possible_sense) - set([0,1,2,3,4,5,6,7,8,15,16,18,19,20,21,23,24,26,29,31,32,34,37,39,40,42,43,44,45,47,48,55,56,57,58,59,60,61,62,63])
+        new_senses_list = list(new_senses)
+        # print('possible senses', list(new_senses))
+        # print('possible movies', possible_moves)
+        choosing = True
+        while choosing:
+            choice = random.choice(new_senses_list)
+            if choice not in self.sensestaken:
+                self.sensestaken += [choice]
+                print(self.sensestaken)
+                choosing = False
+                if len(self.sensestaken) == 24:
+                    self.sensestaken = []
+                print(self.sensestaken)
+        return choice
 
-        return random.choice(possible_sense)
+
+
         
     def handle_sense_result(self, sense_result):
         """
