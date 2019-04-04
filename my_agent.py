@@ -112,8 +112,50 @@ class MyAgent(Player):
         :example: choice = chess.Move(chess.G7, chess.G8, promotion=chess.KNIGHT) *default is Queen
         """
         # TODO: update this method
-        choice = random.choice(possible_moves)
-        return choice
+        # while seconds_left:
+        if self.color == chess.BLACK:
+            target = 'e1'
+        min = 10000000
+        bestMove = None
+
+        curboard = self.board
+
+
+
+        for choice in possible_moves:
+            num_moves_to_goal = self.recursive_moves(choice, curboard, 0)
+            print('num_moves_to_goal', num_moves_to_goal)
+            if num_moves_to_goal < min:
+                min = num_moves_to_goal
+                bestMove = choice
+
+        return bestMove
+
+        # choice = random.choice(possible_moves)
+        # print(possible_moves)
+        # print(len(possible_moves))
+        # return choice
+    def recursive_moves(self, move, board, move_count):
+        if move.to_square == 'e1':
+
+            return move_count + 1
+
+        board.push(move)
+
+        if move_count < 10:
+            min = 10000000
+            for nextmove in board.legal_moves:
+                num_moves = self.recursive_moves(nextmove, board, move_count+1)
+                if num_moves < min:
+                    min = num_moves
+            return min
+        else:
+
+            return random.randint(1,70)
+
+
+        board.pop()
+
         
     def handle_move_result(self, requested_move, taken_move, reason, captured_piece, captured_square):
         """
