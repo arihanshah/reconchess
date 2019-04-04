@@ -11,6 +11,7 @@ Source:         Adapted from recon-chess (https://pypi.org/project/reconchess/)
 
 import random
 import chess
+import numpy as np
 from player import Player
 
 
@@ -33,6 +34,7 @@ class MyAgent(Player):
         # TODO: implement this method
         self.board = board
         self.color = color
+        self.senses = np.empty([6,6])
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -57,6 +59,7 @@ class MyAgent(Player):
         :example: choice = chess.A1
         """
         # TODO: update this method
+
         return random.choice(possible_sense)
         
     def handle_sense_result(self, sense_result):
