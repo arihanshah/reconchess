@@ -16,7 +16,7 @@ from player import Player
 
 
 # TODO: Rename this class to what you would like your bot to be named during the game.
-class MyAgent(Player):
+class Dior(Player):
 
     def __init__(self):
         self.board = None
