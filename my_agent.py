@@ -27,7 +27,7 @@ class Dior(Player):
                             'b': 4,
                             'r': 5,
                             'q': 10,
-                            'k': 1000}
+                            'k': -1}
         
     def handle_game_start(self, color, board):
         """
@@ -207,11 +207,11 @@ class Dior(Player):
                 # print(self.board.piece_at(choice.from_square))
                 # print(choice)
                 # print(self.board.piece_at(choice.from_square).color)
-                our_pieces_moves.append((self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], [choice]))
+                our_pieces_moves.append((self.board.piece_at(choice.from_square),self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], choice))
             else:
                 # print(self.board.piece_at(choice.from_square))
                 # print(choice)
-                our_pieces_moves.append((self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], [choice]))
+                our_pieces_moves.append((self.board.piece_at(choice.from_square),self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], choice))
 
         # print(locations)
         # print(len(our_pieces))
@@ -219,11 +219,40 @@ class Dior(Player):
             print(i)
 
 
+        print("SORTED MOVES LIST")
+        for i in our_pieces_moves:
+            print(i)
+
+
             # print(i.piece_type, i.color, i.symbol())
 
 
+        return self.find_best_move(our_pieces_moves, possible_moves)
+
+
+
+
+
+    def find_best_move(self,our_pieces_moves,possible_moves):
+
+        our_pieces_moves.sort(key=lambda tup: tup[1], reverse=True)
+        boards_list = [self.board.copy() for i in range(len(our_pieces_moves))]
+
+        for move_index in range(len(our_pieces_moves)):
+            boards_list[move_index].set_piece_at(our_pieces_moves[move_index][2].to_square, our_pieces_moves[move_index][0])
+            boards_list[move_index].remove_piece_at(our_pieces_moves[move_index][2].from_square)
+
+
+
+
         return random.choice(possible_moves)
-        
+
+
+
+
+
+
+
     def handle_move_result(self, requested_move, taken_move, reason, captured_piece, captured_square):
         """
         This is a function called at the end of your turn/after your move was made and gives you the chance to update
