@@ -22,6 +22,12 @@ class Dior(Player):
         self.board = None
         self.color = None
         self.my_piece_captured_square = None
+        self.piece_ranks = {'p': 1,
+                            'n': 3,
+                            'b': 4,
+                            'r': 5,
+                            'q': 10,
+                            'k': 1000}
         
     def handle_game_start(self, color, board):
         """
@@ -35,6 +41,7 @@ class Dior(Player):
         self.board = board
         self.color = color
         self.sensestaken = []
+        self.trackedKing = (False, None)
         self.move_counter = 5
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
@@ -60,17 +67,24 @@ class Dior(Player):
         :example: choice = chess.A1
         """
         # TODO: update this method
+        if (self.move_counter == 0 and self.color == chess.WHITE):
+            return 52
+        elif(self.move_counter == 0 and self.color == chess.BLACK):
+            return 12
+
         new_senses = set(possible_sense) - set([0,1,2,3,4,5,6,7,8,15,16,18,19,20,21,23,24,26,29,31,32,34,37,39,40,42,43,44,45,47,48,55,56,57,58,59,60,61,62,63])
         new_senses_list = list(new_senses)
         print('possible senses', list(new_senses))
-        print('possible movies', possible_moves)
+        print('possible moves', possible_moves)
         choosing = True
         while choosing:
+
             choice = random.choice(new_senses_list)
             if choice not in self.sensestaken:
                 self.sensestaken += [choice]
                 # print(self.sensestaken)
                 choosing = False
+                print(choice)
                 if len(self.sensestaken) == 24:
                     self.sensestaken = []
                 # print(self.sensestaken)
@@ -95,9 +109,16 @@ class Dior(Player):
         """
         # TODO: implement this method
         # Hint: until this method is implemented, any senses you make will be lost.
-
+        kingRecentlyTracked = False
         for square, piece in sense_result:
+            if piece != None:
+                if piece.symbol() == 'k':
+                    self.trackedKing = (True, square)
+                    recentlyTracked = True
             self.board.set_piece_at(square, piece)
+
+        if kingRecentlyTracked == False:
+            self.trackedKing = (False, self.trackedKing[1])
 
     def choose_move(self, possible_moves, seconds_left):
         """
@@ -174,18 +195,29 @@ class Dior(Player):
     #     board.pop()
     def test_algo(self, possible_moves, seconds_left):
         locations = []
-        our_pieces = {}
+        print(self.board.legal_moves)
+        # print(possible_moves)
+        our_pieces_moves = []
+
         for choice in possible_moves:
+            # print(choice.from_square)
+            # print(our_pieces)
             if choice.from_square not in locations:
                 locations.append(choice.from_square)
-                our_pieces[self.board.piece_at(choice.from_square)] = [choice]
+                # print(self.board.piece_at(choice.from_square))
+                # print(choice)
+                # print(self.board.piece_at(choice.from_square).color)
+                our_pieces_moves.append((self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], [choice]))
             else:
-                our_pieces[self.board.piece_at(choice.from_square)] += [choice]
+                # print(self.board.piece_at(choice.from_square))
+                # print(choice)
+                our_pieces_moves.append((self.piece_ranks[self.board.piece_at(choice.from_square).symbol().lower()], [choice]))
 
+        # print(locations)
+        # print(len(our_pieces))
+        for i in our_pieces_moves:
+            print(i)
 
-        for i in our_pieces.keys():
-            print('key',i)
-            print('value', our_pieces[i])
 
             # print(i.piece_type, i.color, i.symbol())
 
