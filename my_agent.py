@@ -35,7 +35,7 @@ class Dior(Player):
         self.board = board
         self.color = color
         self.sensestaken = []
-        self.move_counter = 0
+        self.move_counter = 5
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -126,7 +126,8 @@ class Dior(Player):
             self.move_counter += 1
             return chess.Move(chess.D6, chess.E8)
         else:
-            return random.choice(possible_moves)
+            return self.test_algo(possible_moves, seconds_left)
+
 
         # while seconds_left:
         # if self.color == chess.BLACK:
@@ -171,7 +172,25 @@ class Dior(Player):
     #
     #
     #     board.pop()
+    def test_algo(self, possible_moves, seconds_left):
+        locations = []
+        our_pieces = {}
+        for choice in possible_moves:
+            if choice.from_square not in locations:
+                locations.append(choice.from_square)
+                our_pieces[self.board.piece_at(choice.from_square)] = [choice]
+            else:
+                our_pieces[self.board.piece_at(choice.from_square)] += [choice]
 
+
+        for i in our_pieces.keys():
+            print('key',i)
+            print('value', our_pieces[i])
+
+            # print(i.piece_type, i.color, i.symbol())
+
+
+        return random.choice(possible_moves)
         
     def handle_move_result(self, requested_move, taken_move, reason, captured_piece, captured_square):
         """
