@@ -35,6 +35,7 @@ class Dior(Player):
         self.board = board
         self.color = color
         self.sensestaken = []
+        self.move_counter = 0
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -61,18 +62,18 @@ class Dior(Player):
         # TODO: update this method
         new_senses = set(possible_sense) - set([0,1,2,3,4,5,6,7,8,15,16,18,19,20,21,23,24,26,29,31,32,34,37,39,40,42,43,44,45,47,48,55,56,57,58,59,60,61,62,63])
         new_senses_list = list(new_senses)
-        # print('possible senses', list(new_senses))
-        # print('possible movies', possible_moves)
+        print('possible senses', list(new_senses))
+        print('possible movies', possible_moves)
         choosing = True
         while choosing:
             choice = random.choice(new_senses_list)
             if choice not in self.sensestaken:
                 self.sensestaken += [choice]
-                print(self.sensestaken)
+                # print(self.sensestaken)
                 choosing = False
                 if len(self.sensestaken) == 24:
                     self.sensestaken = []
-                print(self.sensestaken)
+                # print(self.sensestaken)
         return choice
 
 
@@ -111,50 +112,65 @@ class Dior(Player):
         :condition: If you intend to move a pawn for promotion other than Queen, please specify the promotion parameter
         :example: choice = chess.Move(chess.G7, chess.G8, promotion=chess.KNIGHT) *default is Queen
         """
-        # TODO: update this method
+
+        if self.move_counter == 0:
+            self.move_counter += 1
+            return chess.Move(chess.B1, chess.C3)
+        elif self.move_counter == 1:
+            self.move_counter += 1
+            return chess.Move(chess.C3, chess.E4)
+        elif self.move_counter == 2:
+            self.move_counter += 1
+            return chess.Move(chess.E4, chess.D6)
+        elif self.move_counter == 3:
+            self.move_counter += 1
+            return chess.Move(chess.D6, chess.E8)
+        else:
+            return random.choice(possible_moves)
+
         # while seconds_left:
-        if self.color == chess.BLACK:
-            target = 'e1'
-        min = 10000000
-        bestMove = None
+        # if self.color == chess.BLACK:
+        #     target = 'e1'
+        # min = 10000000
+        # bestMove = None
+        #
+        # curboard = self.board
 
-        curboard = self.board
 
 
+        # for choice in possible_moves:
+        #     num_moves_to_goal = self.recursive_moves(choice, curboard, 0)
+        #     print('num_moves_to_goal', num_moves_to_goal)
+        #     if num_moves_to_goal < min:
+        #         min = num_moves_to_goal
+        #         bestMove = choice
 
-        for choice in possible_moves:
-            num_moves_to_goal = self.recursive_moves(choice, curboard, 0)
-            print('num_moves_to_goal', num_moves_to_goal)
-            if num_moves_to_goal < min:
-                min = num_moves_to_goal
-                bestMove = choice
-
-        return bestMove
+        # return bestMove
 
         # choice = random.choice(possible_moves)
         # print(possible_moves)
         # print(len(possible_moves))
         # return choice
-    def recursive_moves(self, move, board, move_count):
-        if move.to_square == 'e1':
-
-            return move_count + 1
-
-        board.push(move)
-
-        if move_count < 10:
-            min = 10000000
-            for nextmove in board.legal_moves:
-                num_moves = self.recursive_moves(nextmove, board, move_count+1)
-                if num_moves < min:
-                    min = num_moves
-            return min
-        else:
-
-            return random.randint(1,70)
-
-
-        board.pop()
+    # def recursive_moves(self, move, board, move_count):
+    #     if move.to_square == 'e1':
+    #
+    #         return move_count + 1
+    #
+    #     board.push(move)
+    #
+    #     if move_count < 10:
+    #         min = 10000000
+    #         for nextmove in board.legal_moves:
+    #             num_moves = self.recursive_moves(nextmove, board, move_count+1)
+    #             if num_moves < min:
+    #                 min = num_moves
+    #         return min
+    #     else:
+    #
+    #         return random.randint(1,70)
+    #
+    #
+    #     board.pop()
 
         
     def handle_move_result(self, requested_move, taken_move, reason, captured_piece, captured_square):
