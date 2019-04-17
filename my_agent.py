@@ -230,9 +230,10 @@ class Dior(Player):
 
         moves_to_king = 0
 
+        our_pieces_moves.sort(key=lambda tup: tup[1], reverse=True)
         the_move_index = self.find_best_move(our_pieces_moves, possible_moves, moves_to_king)
-        print(the_move_index, len(our_pieces_moves))
-        print(our_pieces_moves[the_move_index])
+        # print(the_move_index, len(our_pieces_moves))
+        # print(our_pieces_moves[the_move_index])
         if the_move_index < len(our_pieces_moves):
             return our_pieces_moves[the_move_index][2]
         else:
@@ -248,8 +249,9 @@ class Dior(Player):
         boards_list = [self.board.copy() for i in range(len(our_pieces_moves))]
         best_move = -1
 
-        while moves_to_king < 6:
+        while moves_to_king <= 6:
             for move_index in range(len(our_pieces_moves)):
+                # print('here')
                 new_moves_list = []
                 boards_list[move_index].set_piece_at(our_pieces_moves[move_index][2].to_square, our_pieces_moves[move_index][0])
                 boards_list[move_index].remove_piece_at(our_pieces_moves[move_index][2].from_square)
@@ -259,6 +261,7 @@ class Dior(Player):
                 #             #
                 #             # print(new_moves_list)
                 for i in boards_list[move_index].legal_moves:
+                    # print('here')
                     new_moves_list.append((boards_list[move_index].piece_at(i.from_square),self.piece_ranks[boards_list[move_index].piece_at(i.from_square).symbol().lower()], i,))
 
 
@@ -271,15 +274,9 @@ class Dior(Player):
                 if moves_to_king > 6:
                     return random.randint(0,len(our_pieces_moves))
                 else:
+                    moves_to_king += 1
                     return self.find_best_move(new_moves_list, possible_moves, moves_to_king)
         return random.randint(0,len(our_pieces_moves))
-
-
-
-
-
-
-
 
 
 
