@@ -233,7 +233,10 @@ class Dior(Player):
         the_move_index = self.find_best_move(our_pieces_moves, possible_moves, moves_to_king)
         print(the_move_index, len(our_pieces_moves))
         print(our_pieces_moves[the_move_index])
-        return our_pieces_moves[the_move_index][2]
+        if the_move_index < len(our_pieces_moves):
+            return our_pieces_moves[the_move_index][2]
+        else:
+            return our_pieces_moves[the_move_index % len(our_pieces_moves)][2]
 
 
 
