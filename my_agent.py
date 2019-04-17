@@ -43,6 +43,8 @@ class Dior(Player):
         self.sensestaken = []
         self.trackedKing = (False, None)
         self.move_counter = 5
+        self.moves_to_kings = 0
+        self.interest_squares = [34,35,60]
         
     def handle_opponent_move_result(self, captured_piece, captured_square):
         """
@@ -226,26 +228,52 @@ class Dior(Player):
 
             # print(i.piece_type, i.color, i.symbol())
 
+        moves_to_king = 0
 
-        return self.find_best_move(our_pieces_moves, possible_moves)
+        the_move_index = self.find_best_move(our_pieces_moves, possible_moves, moves_to_king)
+        print(the_move_index, len(our_pieces_moves))
+        print(our_pieces_moves[the_move_index])
+        return our_pieces_moves[the_move_index][2]
 
 
 
 
 
-    def find_best_move(self,our_pieces_moves,possible_moves):
-
+    def find_best_move(self,our_pieces_moves, possible_moves, moves_to_king):
+        moves_to_king += 1
         our_pieces_moves.sort(key=lambda tup: tup[1], reverse=True)
         boards_list = [self.board.copy() for i in range(len(our_pieces_moves))]
+        best_move = -1
 
-        for move_index in range(len(our_pieces_moves)):
-            boards_list[move_index].set_piece_at(our_pieces_moves[move_index][2].to_square, our_pieces_moves[move_index][0])
-            boards_list[move_index].remove_piece_at(our_pieces_moves[move_index][2].from_square)
+        while moves_to_king < 6:
+            for move_index in range(len(our_pieces_moves)):
+                new_moves_list = []
+                boards_list[move_index].set_piece_at(our_pieces_moves[move_index][2].to_square, our_pieces_moves[move_index][0])
+                boards_list[move_index].remove_piece_at(our_pieces_moves[move_index][2].from_square)
+                # for poss_next_move_index in range(len(our_pieces_moves)):
+                #             #     if our_pieces_moves[poss_next_move_index][2] in boards_list[move_index].legal_moves:
+                #             #         new_moves_list += [our_pieces_moves[poss_next_move_index]]
+                #             #
+                #             # print(new_moves_list)
+                for i in boards_list[move_index].legal_moves:
+                    new_moves_list.append((boards_list[move_index].piece_at(i.from_square),self.piece_ranks[boards_list[move_index].piece_at(i.from_square).symbol().lower()], i,))
+
+
+                # if the king is found then return this move index
+                for i in new_moves_list:
+                    print(i[2].to_square)
+                    if i[2].to_square in self.interest_squares:
+                        print('here')
+                        return move_index
+                if moves_to_king > 6:
+                    return random.randint(0,len(our_pieces_moves))
+                else:
+                    return self.find_best_move(new_moves_list, possible_moves, moves_to_king)
+        return random.randint(0,len(our_pieces_moves))
 
 
 
 
-        return random.choice(possible_moves)
 
 
 
