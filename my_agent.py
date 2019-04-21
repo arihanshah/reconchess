@@ -42,10 +42,10 @@ class Dior(Player):
         self.board = board
         self.color = color
         self.opponent = chess.BLACK if color == chess.WHITE else chess.WHITE
-        self.DEPTH = 2
+        self.DEPTH = 1
         self.sensestaken = []
         self.trackedKing = (False, None)
-        self.move_counter = 5
+        self.move_counter = 0
         self.moves_to_kings = 0
         self.global_counter = 0
         self.start = 0
@@ -234,21 +234,42 @@ class Dior(Player):
         :condition: If you intend to move a pawn for promotion other than Queen, please specify the promotion parameter
         :example: choice = chess.Move(chess.G7, chess.G8, promotion=chess.KNIGHT) *default is Queen
         """
-
-        if self.move_counter == 0:
-            self.move_counter += 1
-            return chess.Move(chess.B1, chess.C3)
-        elif self.move_counter == 1:
-            self.move_counter += 1
-            return chess.Move(chess.C3, chess.E4)
-        elif self.move_counter == 2:
-            self.move_counter += 1
-            return chess.Move(chess.E4, chess.D6)
-        elif self.move_counter == 3:
-            self.move_counter += 1
-            return chess.Move(chess.D6, chess.E8)
+        if self.color == chess.WHITE:
+            if self.move_counter == 0:
+                self.move_counter += 1
+                return chess.Move(chess.B1, chess.C3)
+            elif self.move_counter == 1:
+                self.move_counter += 1
+                return chess.Move(chess.C3, chess.E4)
+            elif self.move_counter == 2:
+                self.move_counter += 1
+                return chess.Move(chess.E4, chess.D6)
+            elif self.move_counter == 3:
+                self.move_counter += 1
+                return chess.Move(chess.C2, chess.D3)
+            elif self.move_counter == 4:
+                return chess.Move(chess.D6, chess.E8)
+            else:
+                self.move_counter += 1
+                return self.test_algo(possible_moves, seconds_left)
         else:
-            return self.test_algo(possible_moves, seconds_left)
+            if self.move_counter == 0:
+                self.move_counter += 1
+                return chess.Move(chess.B8, chess.C6)
+            elif self.move_counter == 1:
+                self.move_counter += 1
+                return chess.Move(chess.C6, chess.E5)
+            elif self.move_counter == 2:
+                self.move_counter += 1
+                return chess.Move(chess.E5, chess.D3)
+            elif self.move_counter == 3:
+                self.move_counter += 1
+                return chess.Move(chess.C7, chess.D6)
+            elif self.move_counter == 4:
+                return chess.Move(chess.D3, chess.E1)
+            else:
+                self.move_counter += 1
+                return self.test_algo(possible_moves, seconds_left)
 
 
         # while seconds_left:
