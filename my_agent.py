@@ -248,6 +248,7 @@ class Dior(Player):
             self.move_counter += 1
             return chess.Move(chess.D6, chess.E8)
         else:
+            self.global_counter = 0
             return self.test_algo(possible_moves, seconds_left)
 
 
